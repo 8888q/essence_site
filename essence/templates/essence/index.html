@@ -1,0 +1,9 @@
+{% if moments %}
+    <ul>
+    {% for moment in moments %}
+        <li><a>{{ moment }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No moments yet.</p>
+{% endif %}
