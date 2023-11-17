@@ -13,7 +13,7 @@ class YoutubeVideo(models.Model):
     id = models.CharField(max_length=11, primary_key=True)
     channel = models.CharField(max_length=200)
     title = models.TextField()
-
+    length = models.IntegerField()
 
 class TextQuote(models.Model):
     metadata = models.OneToOneField(Quote, on_delete=models.CASCADE, primary_key=True)
