@@ -1,5 +1,7 @@
+from typing import Any
 from django import forms
 from essence.models import YoutubeQuote, TextQuote
+from essence.youtubeapi import video_id, video_info
 
 class QuoteForm(forms.ModelForm):
     title = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Title', 'class': 'form-control'}))
@@ -24,6 +26,23 @@ class YoutubeQuoteForm(QuoteForm):
         }
 
     field_order = ["title", "description", "youtube_link", "start_seconds", "end_seconds"]
+
+    def clean(self):
+        for f, j in self.cleaned_data.items():
+            print(f, j)
+        youtube_id = self.cleaned_data["youtube_link"]
+        start_seconds = self.cleaned_data["start_seconds"]
+        print(start_seconds)
+        end_seconds = self.cleaned_data["end_seconds"]
+
+        length = video_info(video_id(youtube_id))["length"]
+        if start_seconds >= end_seconds:
+            self.add_error("start_seconds", "Start seconds must be less than End seconds")
+            self.add_error("end_seconds", "End seconds must be greater than Start seconds")
+        if start_seconds >= length:
+            self.add_error("start_seconds", "Start seconds must be less than video length")
+        if end_seconds > length:
+            self.add_error("end_seconds", "End seconds cannot be greater than video length")
 
 class TextQuoteForm(QuoteForm):
     class Meta:

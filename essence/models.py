@@ -1,5 +1,8 @@
 from django.db import models
+from django.db.models import CheckConstraint, Q, F
 from django.utils import timezone
+from django.core import validators
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -28,5 +31,23 @@ class TextQuote(models.Model):
 class YoutubeQuote(models.Model):
     metadata = models.OneToOneField(Quote, on_delete=models.CASCADE)
     youtube_id = models.ForeignKey(YoutubeVideo, on_delete=models.DO_NOTHING)
-    start_seconds = models.IntegerField()
+    start_seconds = models.IntegerField(validators=[validators.MinValueValidator(0)])
     end_seconds = models.IntegerField()
+
+    class Meta:
+        constraints = [
+            CheckConstraint(
+                check = Q(end_seconds__gt=F('start_seconds')), 
+                name = 'check_end_seconds',
+            ),
+        ]
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+    
+    def clean(self) -> None:
+        if self.start_seconds and self.end_seconds:
+            if self.end_seconds <= self.start_seconds: raise ValidationError("End seconds must be greater than Start seconds.")
+            if self.end_seconds > self.youtube_id.length: raise ValidationError("End seconds must be less than video length")
+        return super().clean()
