@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.views import generic
@@ -14,6 +16,31 @@ class IndexView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context["youtube"] = YoutubeQuote.objects.all()
         context["text"] = TextQuote.objects.all()
+        return context
+    
+class TextQuoteIndexView(generic.ListView):
+    template_name = "essence/list.html"
+    context_object_name = "quotes"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return TextQuote.objects.all().order_by("-metadata__entry_timestamp")
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["text"] = True
+        return context
+    
+
+class YoutubeQuoteIndexView(generic.ListView):
+    template_name = "essence/list.html"
+    context_object_name = "quotes"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return YoutubeQuote.objects.all().order_by("-metadata__entry_timestamp")
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["youtube"] = True
         return context
     
 class YoutubeQuoteCreateView(generic.CreateView):
@@ -49,12 +76,7 @@ class YoutubeQuoteCreateView(generic.CreateView):
 
 class YoutubeQuoteView(generic.DetailView):
     model = YoutubeQuote
-    template_name = "essence/detail.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["youtube"] = True
-        return context
+    template_name = "essence/youtubedetail.html"
     
 
 class TextQuoteCreateView(generic.CreateView):
@@ -80,9 +102,4 @@ class TextQuoteCreateView(generic.CreateView):
 
 class TextQuoteView(generic.DetailView):
     model = TextQuote
-    template_name = "essence/detail.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["text"] = True
-        return context
+    template_name = "essence/textdetail.html"

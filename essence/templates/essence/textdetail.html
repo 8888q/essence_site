@@ -1,0 +1,15 @@
+{%extends './detail.html'%}
+{%block quote_content%}
+<figure class="text-center mb-4">
+    <blockquote class="blockquote">
+        <p class="pb-3">
+            <i class="fas fa-quote-left fa-xs text-primary"></i>
+        <span class="lead">{{textquote.quote_text|linebreaks}}</span>
+        <i class="fas fa-quote-right fa-xs text-primary"></i>
+        </p>
+    </blockquote>
+    <figcaption class="blockquote-footer mb-0">
+        {{textquote.author}}, <i> {{textquote.text_title}} </i>
+    </figcaption>
+</figure>
+{%endblock%}

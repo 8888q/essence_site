@@ -1,10 +1,16 @@
 {%extends './base.html' %}
 {%block content%}
-<form method="post">
-    {%csrf_token %}
-    <fieldset>
-        {{form.as_div}}
-        <input type="submit" value="Save" class="btn btn-primary"/>
-    </fieldset>
-</form>
+<div class="col-4 mx-auto">
+    <h1 class="display-6">Enter new quote...</h1>
+    <form method="post">
+        {%csrf_token %}
+        <div class="form-group">
+            {%for field in form%}
+            {{field}}
+            <br/>
+            {%endfor%}
+            <input type="submit" value="Save" class="btn btn-success mx-auto"/>
+        </div>
+    </form>
+</div>
 {%endblock%}

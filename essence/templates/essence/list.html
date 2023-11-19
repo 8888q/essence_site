@@ -1,0 +1,30 @@
+{% extends './base.html' %}
+{% block content %}
+    <h1 class="text-center display-2">Your Quotes...</h1><br/>
+    <hr class="col-6 mx-auto" style="margin: 0;">
+    {% for quote in quotes %}
+    <div class="row col-6 mx-auto quoterow">
+        {%if youtube %}
+        <a href="{% url 'essence:youtube_detail' quote.pk %}" class="sneakylink"></a>
+        {%endif%}
+        {%if text %}
+        <a href="{% url 'essence:text_detail' quote.pk %}" class="sneakylink"></a>
+        {%endif%}
+        <div class="row align-items-center">
+            <p class="col lead display-6">
+                {{quote.metadata.title}},
+                <small class="fs-5">
+                    {%if text %}
+                    {{ quote.text_title }}
+                    {% endif %}
+                    {%if youtube %}
+                    {{ quote.youtube_id.title }}
+                    {% endif %}
+                </small>
+            </p>
+            {%if youtube %} <img class="rounded col col-3 py-2" src="https://i.ytimg.com/vi/{{quote.youtube_id.id}}/sddefault.jpg"/> {%endif%}
+        </div>
+        <hr style="margin: 0;">
+    </div>
+    {%endfor%}
+    {% endblock %}

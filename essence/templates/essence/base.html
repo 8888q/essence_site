@@ -1,13 +1,54 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Essence</title>
         {% load bootstrap5 %}
+        {% load static %}
         {% bootstrap_css %}
         {% bootstrap_javascript %}
+        <title>Essence</title>
+        <link rel="icon" href="{% static 'essence/images/Essence.png' %}">
+        <link rel="stylesheet" href="{% static 'essence/style.css' %}">
     </head>
     <body>
-        <div id="content">
+        <nav class="navbar navbar-expand-md navbar-dark static-top bg-dark">
+            <div class="container-xl">
+                <a class="navbar-brand" href="{% url 'essence:index' %}">
+                    <img src="{% static 'essence/images/Essence.png' %}" alt="Essence Logo" width="40" height="40"/>
+                    Essence
+                </a>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.view_name == 'essence:index' %}active{% endif %}" href="{% url 'essence:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.view_name == 'essence:text_index' or request.resolver_match.view_name == 'essence:text_detail' %}active{% endif %}" href="{% url 'essence:text_index' %}">
+                                Text Quotes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.view_name == 'essence:youtube_index' or request.resolver_match.view_name == 'essence:youtube_detail' %}active{% endif %}" href="{% url 'essence:youtube_index' %}">
+                                Audio/Video Quotes
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a style="background-color: #212529; border-color: #212529;" class="btn btn-dark dropdown-toggle nav-link {% if request.resolver_match.view_name == 'essence:text_create' or request.resolver_match.view_name == 'essence:youtube_create' %}active{% endif %}" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page">
+                                New
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'essence:text_create' %}">Text</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'essence:youtube_create' %}">Audio/Video</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>            
+        <div id="content" class="pt-4 pb-4">
             {% block content %}
             {%endblock%}
         </div>

@@ -1,0 +1,31 @@
+{%extends './detail.html'%}
+{%block quote_content%}
+<div id="player" class=""></div>
+<script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+<script type="text/javascript">
+var player;
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '400',
+        width: '100%',
+        videoId: '{{youtubequote.youtube_id.id}}',
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+function onPlayerReady(event) {
+    loopStart();
+    player.playVideo();
+}
+function loopStart() {
+    player.seekTo({{youtubequote.start_seconds}});
+}
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        setTimeout(loopStart, ({{youtubequote.end_seconds}} - {{youtubequote.start_seconds}})*1000);
+    }
+}
+</script>
+{%endblock%}

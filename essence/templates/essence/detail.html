@@ -1,9 +1,20 @@
 {% extends './base.html' %}
 {% block content %}
-{% if True %}
-<h1>{{ youtubequote.youtube_id.title }}</h1>
-{% endif %}
-{% if text %}
-<h1>{{ textquote.text_title }}</h1>
-{% endif %}
+<div class="col-6 mx-auto">
+    <div class="card" style="border-radius: 15px; background-color: #EEE;">
+        <div class="card-body p-5">
+            {%block quote_content%}
+            {%endblock%}
+        </div>
+    </div>
+    <div class="text-center pt-4">
+        <h1 class="display-6">{{object.metadata.title}}</h1>
+        {%if object.metadata.description %}
+        <hr>
+        <p>
+            {{object.metadata.description}}
+        </p>
+        {%endif%}
+    </div>
+</div>
 {% endblock %}
