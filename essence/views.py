@@ -25,16 +25,17 @@ def register(request):
 
     return render(request, "essence/register.html", {"form":form})
 
-# Create your views here.
+
 class IndexView(generic.TemplateView):
     template_name = "essence/index.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if not self.request.user.is_anonymous:
-            context["youtube"] = YoutubeQuote.objects.filter(user=self.request.user)
-            context["text"] = TextQuote.objects.filter(user=self.request.user)
+            context["youtube_quotes"] = YoutubeQuote.objects.filter(user=self.request.user)
+            context["text_quotes"] = TextQuote.objects.filter(user=self.request.user)
         return context
+    
     
 class TextQuoteIndexView(generic.ListView):
     template_name = "essence/list.html"
@@ -61,6 +62,7 @@ class YoutubeQuoteIndexView(generic.ListView):
         context["youtube"] = True
         return context
     
+    
 class YoutubeQuoteCreateView(generic.CreateView):
     template_name = "essence/create.html"
     model = YoutubeQuote
@@ -86,11 +88,6 @@ class YoutubeQuoteCreateView(generic.CreateView):
         
         self.success_url = reverse("essence:youtube_detail", args=(ytquote.pk,))
         return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["youtube"] = True
-        return context
     
 
 class YoutubeQuoteView(generic.DetailView):
@@ -113,11 +110,6 @@ class TextQuoteCreateView(generic.CreateView):
         
         self.success_url = reverse("essence:text_detail", args=(text_quote.pk,))
         return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["text"] = True
-        return context
     
 
 class TextQuoteView(generic.DetailView):

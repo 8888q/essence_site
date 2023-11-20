@@ -27,27 +27,29 @@
     <h1 class="text-center">Your quotes at a glance...</h1>
     <h2>Text Quotes</h2>
     <ul>
-        {% for te in text %}
-        <li>{{ te.metadata.title }}</li>
+        {% for quote in text_quotes %}
+        <li>{{ quote.metadata.title }}</li>
         {% empty %}
         <li>No text quotes yet.</li>
         {% endfor %}
     </ul>
     <h2>Youtube Quotes</h2>
     <ul>
-        {% for yt in youtube %}
-        <li>{{ yt.metadata.title }}</li>
-    {% empty %}
+        {% for quote in youtube_quotes %}
+        <li>{{ quote.metadata.title }}</li>
+        {% empty %}
         <li>No youtube quotes yet.</li>
-    {% endfor %}
+        {% endfor %}
     </ul>
     {%else%}
+    <div class="text-center">
         <h1 class="display-1">Not Logged in?</h1>
         <br/>
         <a class="btn btn-primary" href="{% url 'login' %}">Log In</a>
         <br/>
         <h3 class="mt-4">New User?</h3>
         <a class="btn btn-secondary" href="{% url 'essence:register' %}">Create Account</a>
+    </div>
     {%endif%}
 </div>
 {%endblock%}

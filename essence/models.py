@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import CheckConstraint, Q, F
 from django.utils import timezone
 from django.core import validators
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -43,13 +42,3 @@ class YoutubeQuote(models.Model):
                 name = 'check_end_seconds',
             ),
         ]
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        return super().save(*args, **kwargs)
-    
-    def clean(self) -> None:
-        if self.start_seconds and self.end_seconds:
-            if self.end_seconds <= self.start_seconds: raise ValidationError("End seconds must be greater than Start seconds.")
-            if self.end_seconds > self.youtube_id.length: raise ValidationError("End seconds must be less than video length")
-        return super().clean()

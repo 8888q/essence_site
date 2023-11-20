@@ -9,20 +9,6 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["username", "password1", "password2"]
-        widgets = {
-            'username': forms.TextInput(attrs={
-                'class': "form-control",
-                'placeholder': 'Username'
-                }),
-            'password1': forms.PasswordInput(attrs={
-                'class': "form-control", 
-                'placeholder': 'Password'
-                }),
-            'password2': forms.PasswordInput(attrs={
-                'class': "form-control", 
-                'placeholder': 'Repeat Password'
-                }),
-        }
 
 
 class QuoteForm(forms.ModelForm):
@@ -50,11 +36,8 @@ class YoutubeQuoteForm(QuoteForm):
     field_order = ["title", "description", "youtube_link", "start_seconds", "end_seconds"]
 
     def clean(self):
-        for f, j in self.cleaned_data.items():
-            print(f, j)
         youtube_id = self.cleaned_data["youtube_link"]
         start_seconds = self.cleaned_data["start_seconds"]
-        print(start_seconds)
         end_seconds = self.cleaned_data["end_seconds"]
 
         length = video_info(video_id(youtube_id))["length"]

@@ -32,13 +32,10 @@ api_key = "AIzaSyBRH6EWN4RPnZGkPHv8pIL4jMTC9KNbdJ8"
 youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=api_key)
 
 def video_info(video_id):
-    try:
-        x = youtube.videos().list(part='snippet,contentDetails', id=video_id).execute()
-        response = x['items'][0]
-        info = dict()
-        info["title"] = response['snippet']['title']
-        info["channel"] = response['snippet']['channelTitle']
-        info["length"] = int(parse_duration(response['contentDetails']['duration']).total_seconds())
-        return info
-    except Exception:
-        return None
+    response = youtube.videos().list(part='snippet,contentDetails', id=video_id).execute()
+    items = response['items'][0]
+    info = dict()
+    info["title"] = items['snippet']['title']
+    info["channel"] = items['snippet']['channelTitle']
+    info["length"] = int(parse_duration(items['contentDetails']['duration']).total_seconds())
+    return info
