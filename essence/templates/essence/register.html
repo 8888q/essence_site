@@ -1,0 +1,12 @@
+{% extends "./base.html" %}
+{% load bootstrap5 %}
+{% block content %}
+<div class="col-4 mx-auto">
+    <h2 class="text-center display-4">Create New User</h2>
+    <form method="POST" class="form-group">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-success">Register</button>
+    </form>
+</div>
+{% endblock %}

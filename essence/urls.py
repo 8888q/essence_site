@@ -5,6 +5,7 @@ from . import views
 app_name = "essence"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
+    path("register/", views.register, name="register"),
     path("newyt/", views.YoutubeQuoteCreateView.as_view(), name="youtube_create"),
     path("newtext/", views.TextQuoteCreateView.as_view(), name="text_create"),
     path("textquote/", views.TextQuoteIndexView.as_view(), name="text_index"),

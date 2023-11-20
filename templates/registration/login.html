@@ -1,0 +1,17 @@
+{% extends "essence/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="col-4 mx-auto">
+  <h2 class="text-center display-4">Login</h2>
+  {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {%bootstrap_form form%}
+    <input type="submit" value="Login" class="btn btn-success">
+  </form>
+</div>
+
+{% endblock %}

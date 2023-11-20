@@ -2,6 +2,28 @@ from typing import Any
 from django import forms
 from essence.models import YoutubeQuote, TextQuote
 from essence.youtubeapi import video_id, video_info
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ["username", "password1", "password2"]
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': "form-control",
+                'placeholder': 'Username'
+                }),
+            'password1': forms.PasswordInput(attrs={
+                'class': "form-control", 
+                'placeholder': 'Password'
+                }),
+            'password2': forms.PasswordInput(attrs={
+                'class': "form-control", 
+                'placeholder': 'Repeat Password'
+                }),
+        }
+
 
 class QuoteForm(forms.ModelForm):
     title = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Title', 'class': 'form-control'}))

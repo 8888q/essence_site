@@ -3,7 +3,7 @@ from django.db.models import CheckConstraint, Q, F
 from django.utils import timezone
 from django.core import validators
 from django.core.exceptions import ValidationError
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Quote(models.Model):
@@ -19,6 +19,7 @@ class YoutubeVideo(models.Model):
     length = models.IntegerField()
 
 class TextQuote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=1)
     metadata = models.OneToOneField(Quote, on_delete=models.CASCADE, primary_key=True)
     quote_text = models.TextField()
     author = models.CharField(max_length=200)
@@ -29,6 +30,7 @@ class TextQuote(models.Model):
     
 
 class YoutubeQuote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=1)
     metadata = models.OneToOneField(Quote, on_delete=models.CASCADE)
     youtube_id = models.ForeignKey(YoutubeVideo, on_delete=models.DO_NOTHING)
     start_seconds = models.IntegerField(validators=[validators.MinValueValidator(0)])

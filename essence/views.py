@@ -4,9 +4,26 @@ from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.views import generic
 from django.urls import reverse
+from django.shortcuts import render, redirect
 from .models import Quote, TextQuote, YoutubeQuote, YoutubeVideo
-from .forms import YoutubeQuoteForm, TextQuoteForm
+from .forms import YoutubeQuoteForm, TextQuoteForm, RegisterForm
 from .youtubeapi import video_id, video_info
+from django.contrib.auth import authenticate, login
+
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        print(form)
+        if form.is_valid():
+            form.save()
+            user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
+            login(request, user)
+            return redirect(reverse("essence:index"))
+    else:
+        form = RegisterForm()
+
+    return render(request, "essence/register.html", {"form":form})
 
 # Create your views here.
 class IndexView(generic.TemplateView):
@@ -14,8 +31,9 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["youtube"] = YoutubeQuote.objects.all()
-        context["text"] = TextQuote.objects.all()
+        if not self.request.user.is_anonymous:
+            context["youtube"] = YoutubeQuote.objects.filter(user=self.request.user)
+            context["text"] = TextQuote.objects.filter(user=self.request.user)
         return context
     
 class TextQuoteIndexView(generic.ListView):
@@ -23,7 +41,7 @@ class TextQuoteIndexView(generic.ListView):
     context_object_name = "quotes"
 
     def get_queryset(self) -> QuerySet[Any]:
-        return TextQuote.objects.all().order_by("-metadata__entry_timestamp")
+        return TextQuote.objects.filter(user=self.request.user).order_by("-metadata__entry_timestamp")
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -36,7 +54,7 @@ class YoutubeQuoteIndexView(generic.ListView):
     context_object_name = "quotes"
 
     def get_queryset(self) -> QuerySet[Any]:
-        return YoutubeQuote.objects.all().order_by("-metadata__entry_timestamp")
+        return YoutubeQuote.objects.filter(user=self.request.user).order_by("-metadata__entry_timestamp")
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -63,6 +81,7 @@ class YoutubeQuoteCreateView(generic.CreateView):
         quote = Quote(title=form.cleaned_data['title'], description=form.cleaned_data['description'])
         quote.save()
         ytquote.metadata = quote
+        ytquote.user = self.request.user
         ytquote.save()
         
         self.success_url = reverse("essence:youtube_detail", args=(ytquote.pk,))
@@ -89,6 +108,7 @@ class TextQuoteCreateView(generic.CreateView):
         quote = Quote(title=form.cleaned_data['title'], description=form.cleaned_data['description'])
         quote.save()
         text_quote.metadata = quote
+        text_quote.user = self.request.user
         text_quote.save()
         
         self.success_url = reverse("essence:text_detail", args=(text_quote.pk,))
