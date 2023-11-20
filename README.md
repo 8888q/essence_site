@@ -1,6 +1,6 @@
 # Essence
 Ever read a passage in a book that felt especially poignant, or have a part of a song that really stands out?
-Essence is a website built to save and remember the essence of media like those.
+Essence is a website built to save and remember the essence of media.
 Currently, you can save a moment as a text quote or a video/audio quote via youtube with a start and end time.  
 
 ### Packages used:
